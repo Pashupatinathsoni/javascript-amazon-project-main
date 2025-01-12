@@ -1,7 +1,7 @@
 import {cart,removeFromcart,updatedeliveryOption} from '../../data/cart.js'
 import {products} from '../../data/products.js'
 import { formatcurrency } from '../utils/money.js';
-//  import { updateCartquantity } from './amazon.js';
+
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { deliveryOptions } from '../../data/deliveryoption.js';
 
@@ -32,10 +32,10 @@ export function randerOrderSummary(){
         });
 
         const today = dayjs();
-        // const deliverydate =  today.add(
-        //   deliveryoption.deliveryDays,
-        //   'days'
-        // );
+        const deliverydate =  today.add(
+          deliveryoption.deliveryDays,
+          'days'
+        );
         const datestring = deliverydate.format(
           'dddd, MMMM D'
         );
@@ -124,8 +124,7 @@ export function randerOrderSummary(){
 
       document.querySelector('.js-order-summary').innerHTML = cartsummaryHtml;
 
-
-
+      
       document.querySelectorAll('.js-delete-link').forEach((link) =>{
         link.addEventListener('click',()=>{
           
