@@ -1,13 +1,12 @@
 import {cart,removeFromcart,updatedeliveryOption} from '../../data/cart.js'
-import {products} from '../../data/products.js'
+import {products,getProduct} from '../../data/products.js'
 import { formatcurrency } from '../utils/money.js';
 
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
-import { deliveryOptions } from '../../data/deliveryoption.js';
+import { deliveryOptions,getdeliveryOption } from '../../data/deliveryoption.js';
+import { renderpaymentSummary } from './paymentSummary.js';
 
 
-const today = dayjs();
-const deliverydate =  today.add(7,'days');
 
 export function randerOrderSummary(){
   
@@ -24,19 +23,15 @@ export function randerOrderSummary(){
         
         const deliveryOptionId = cartItem.deliveryOptionsId;
 
-        let deliveryoption;
-        deliveryOptions.forEach((option) => {
-            if(option.id === deliveryOptionId){
-              deliveryoption = option;
-            }
-        });
+        const deliveryoption = getdeliveryOption(deliveryOptionId) ;
+        
 
-        const today = dayjs();
-        const deliverydate =  today.add(
+         const today1 = dayjs();
+         const deliverydate1 =  today1.add(
           deliveryoption.deliveryDays,
           'days'
         );
-        const datestring = deliverydate.format(
+        const datestring1 = deliverydate1.format(
           'dddd, MMMM D'
         );
         
@@ -44,7 +39,7 @@ export function randerOrderSummary(){
         cartsummaryHtml += `
           <div class="cart-item-container js-cart-item-container-${matchingproduct.id}">
             <div class="delivery-date">
-              Delivery date: ${datestring}
+              Delivery date: ${datestring1}
             </div>
 
             <div class="cart-item-details-grid">
@@ -87,12 +82,12 @@ export function randerOrderSummary(){
         let html = '';
 
         deliveryOptions.forEach((deliveryoption) =>{
-          const today = dayjs();
-          const deliverydate =  today.add(
+          const today2 = dayjs();
+          const deliverydate2 =  today2.add(
             deliveryoption.deliveryDays,
             'days'
           );
-         const datestring = deliverydate.format(
+         const datestring2 = deliverydate2.format(
             'dddd, MMMM D'
           );
           
@@ -110,7 +105,7 @@ export function randerOrderSummary(){
                 name="delivery-option-${matchingproduct.id}">
               <div>
                 <div class="delivery-option-date">
-                  ${datestring}
+                  ${datestring2}
                 </div>
                 <div class="delivery-option-price">
                   ${pricestring} Shipping
@@ -134,7 +129,7 @@ export function randerOrderSummary(){
           const container = document.querySelector(`.js-cart-item-container-${productId}`);
           container.remove();
           
-          
+          renderpaymentSummary();
         });
       }); 
 
@@ -143,7 +138,8 @@ export function randerOrderSummary(){
         element.addEventListener('click', () =>{
           const {productId,deliveryOptionsId} = element.dataset;
           updatedeliveryOption(productId,deliveryOptionsId);
-          // randerOrderSummary();
+          randerOrderSummary();
+          renderpaymentSummary();
         });
       });
 }

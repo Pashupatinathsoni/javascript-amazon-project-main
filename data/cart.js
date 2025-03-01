@@ -27,7 +27,7 @@ export function addTocart(productId){
    });
 
    if(matchingitem){
-     matchingitem.quantity +=1;
+     matchingitem.quantity +=1; 
    }
    else{
      cart.push({
